@@ -11,6 +11,10 @@ var spawn = require('child_process').spawn;
 var bodyParser = require('body-parser');
 var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
+var webeditorPath = path.dirname(__dirname); //webeditor project path
+
+
+
 const low = require('lowdb')
 const fileAsync = require('lowdb/lib/file-async')
 const db = low('db.json', {
@@ -211,8 +215,8 @@ app.ws('/bash', function(ws, req) {
 
 
 //web frontend
-app.use(express.static('../web'));
-app.use('/bower_components', express.static('../bower_components'));
-app.use('/node_modules', express.static('../node_modules'));
+app.use(express.static(webeditorPath + '/web'));
+app.use('/bower_components', express.static(webeditorPath + '/bower_components'));
+app.use('/node_modules', express.static(webeditorPath + '/node_modules'));
 
 app.listen(8888);

@@ -4,6 +4,7 @@ webeditor一个开源的web开发IDE.其设计思想是简单,易用
 * 文件操作(创建,删除,重命名)
 * 支持 js,php,go,c,java,json,lua,ruby,py等等语言的高亮显示和代码提示
 * 代码编辑和保存
+* 支持terminal控制台
 
 #系统支持
 目前只支持unix类系统,后续会加入对window支持

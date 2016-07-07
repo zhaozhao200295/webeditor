@@ -1,4 +1,3 @@
-# webeditor
 webeditor一个开源的web开发IDE.其设计思想是简单,易用.
 
 # 特性
@@ -14,7 +13,7 @@ cd webeditor
 npm install   
 npm start   
 
-#useage
+#Useage
 http://ip:8888
 
 #未来计划推出的功能： 

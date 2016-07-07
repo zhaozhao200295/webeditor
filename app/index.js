@@ -25,8 +25,8 @@ db.defaults({ paths: [] })
   .value()
 
 const pathTable = db.get('paths');
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
 
 app.all("/get_path_history", (req, res) => {
     var data = _.map(pathTable.value(), (dd) => {

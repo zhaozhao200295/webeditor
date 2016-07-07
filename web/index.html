@@ -45,46 +45,43 @@
 
 
 
-<div class="container-fluid webpage">
-    <div class="row" id="tree">
-        <div class="col-md-3 left" style="padding:0">
+<div id="tree" class="webpage">
+        <div class="left" style="padding:0">
             <ul id="menu">
               <item  class="item" :model="treeData"></item>
             </ul>
         </div>
-        <div class="col-md-9" style="padding:0">
-           <div class="right">
-                <div class="header" id="header">
-                  <ul class="">
-                    <li v-for="tab in tabs" v-on:mouseover="tab.close_show=true" v-on:mouseout="tab.close_show=false" title="{{tab.path}}" v-on:click="show_editor(tab._id)" class="{{curTab==tab._id? 'active': ''}}"
-                      _id="{{tab._id}}">                      
-                      <div class="text" >{{tab.name|maxlenght 24}} </div>
-                       <div v-show="tab.save||tab.close_show"  v-on:click="close(tab._id)"  class="close-icon"><span aria-hidden="true">&times;</span></div>
-                       <div  v-show="!tab.save&&!tab.close_show"  class="close-icon"><span style="color:#679AFF" class="glyphicon glyphicon-asterisk"></span></div> 
-                     </li>
+
+          <div class="right">
+              <div class="header" id="header">
+                <ul class="">
+                  <li v-for="tab in tabs" v-on:mouseover="tab.close_show=true" v-on:mouseout="tab.close_show=false" title="{{tab.path}}" v-on:click="show_editor(tab._id)" class="{{curTab==tab._id? 'active': ''}}"
+                    _id="{{tab._id}}">                      
+                    <div class="text" >{{tab.name|maxlenght 24}} </div>
+                      <div v-show="tab.save||tab.close_show"  v-on:click="close(tab._id)"  class="close-icon"><span aria-hidden="true">&times;</span></div>
+                      <div  v-show="!tab.save&&!tab.close_show"  class="close-icon"><span style="color:#679AFF" class="glyphicon glyphicon-asterisk"></span></div> 
+                    </li>
+                </ul>
+              </div>
+              <div class="content">
+                <div style="height:100%;" type="body" id="content{{tab._id}}" v-for="tab in tabs" v-show="curTab==tab._id"></div>
+              </div>
+
+              <div class="terminal_module" id="terminal_module">
+                <div class="header" > 
+                  <ul>
+                      <li v-for="(id, status) in labels" v-on:click="curLabel=id" ><i  class="glyphicon glyphicon-file {{curLabel==id?'active':''}}"></i></li>
                   </ul>
-                </div>
-                <div class="content">
-                  <div style="height:100%;" type="body" id="content{{tab._id}}" v-for="tab in tabs" v-show="curTab==tab._id"></div>
-                </div>
 
-                <div class="terminal_module" id="terminal_module">
-                  <div class="header" > 
-                    <ul>
-                        <li v-for="(id, status) in labels" v-on:click="curLabel=id" ><i  class="glyphicon glyphicon-file {{curLabel==id?'active':''}}"></i></li>
-                    </ul>
-
-                    
-                    <button type="button" class="close"  aria-label="Close"><span aria-hidden="true" v-on:click="close_terminal()">&times;</span></button>
-                    <button type="button" class="close"  aria-label="Close"><span aria-hidden="true" v-on:click="add_terminal()">+</span></button>
-                    <button type="button" class="close"  aria-label="Close"><span v-on:click="hide_terminal()" class="glyphicon glyphicon-triangle-bottom" ></span></button>
-                  </div>
-                  <div id="terminal-container{{id}}" v-for="(id, status) in labels" v-show="curLabel==id" style="height:100%;"></div>
+                  
+                  <button type="button" class="close"  aria-label="Close"><span aria-hidden="true" v-on:click="close_terminal()">&times;</span></button>
+                  <button type="button" class="close"  aria-label="Close"><span aria-hidden="true" v-on:click="add_terminal()">+</span></button>
+                  <button type="button" class="close"  aria-label="Close"><span v-on:click="hide_terminal()" class="glyphicon glyphicon-triangle-bottom" ></span></button>
                 </div>
+                <div id="terminal-container{{id}}" class="terminal_window" v-for="(id, status) in labels" v-show="curLabel==id" ></div>
+              </div>
 
-            </div>
-        </div>
-    </div>
+          </div>      
 
 </div>
 

@@ -20,6 +20,86 @@ var editor_create,//monaco editor
         children: []
     };
 
+$.fn.extend( {
+    Resize: function( drag_position ) {
+        var currentDisTance = 5;
+        var resizeMode = 0;
+        var isResize = false;
+        var isStartResize = false;
+        $( this ).mousemove( function( e ) {
+            var currentDisX = e.pageX - $( this ).offset().left;
+            var currentDisY = e.pageY - $( this ).offset().top;
+
+            if( drag_position == 'right' ) {
+                if( $( this ).width() - currentDisX < currentDisTance ) {
+                    $( this ).css( "cursor", "e-resize" );
+                } else {
+                    if( isStartResize == true ) return;
+                    $( this ).css( "cursor", "default" );
+                }
+            } else if( drag_position == 'top' ) {
+                if( currentDisY < currentDisTance ) {
+                    $( this ).css( "cursor", "n-resize" );
+                } else {
+                    if( isStartResize == true ) return;
+                    $( this ).css( "cursor", "default" );
+                }
+            }
+        });
+        $( this ).mousedown( function( e ) {
+            isResize = true;
+            var currentDisX = e.pageX - $( this ).offset().left;
+            var currentDisY = e.pageY - $( this ).offset().top;
+            var initX = e.pageX;
+            var initY = e.pageY;
+            var initHeight = $( this ).height();
+            var initWidth = $( this ).width();
+            console.log( initWidth )
+            if( $( this ).width() - currentDisX < currentDisTance ) {
+                $( this ).css( "cursor", "e-resize" );
+                $( this ).attr( "mode", "re" );
+                resizeMode = 1;
+            } else if( currentDisY < currentDisTance ) {
+                $( this ).css( "cursor", "n-resize" );
+                $( this ).attr( "mode", "re" );
+                resizeMode = 2;
+            } else {
+                if( isStartResize == true ) return;
+                $( this ).css( "cursor", "default" );
+                $( this ).attr( "mode", "me" );
+            }
+            var currentTarget = $( this );
+
+
+            $( document ).mousemove( function( event ) {
+                if( $( currentTarget ).attr( "mode" ) == "me" || isResize == false ) return;
+                isStartResize = true;
+                if( resizeMode == 1 ) $( currentTarget ).css( "width", initWidth - initX + event.pageX + "px" );
+                else if( resizeMode == 2 ) $( currentTarget ).css( "height", initHeight + initY - event.pageY + "px" );
+
+                window_init();
+                if( editor[ vm.curTab ] ) {
+                    editor[ vm.curTab ].layout();
+                }
+                if( terminals[ vm.curLabel ] ) {
+                    terminals[ vm.curLabel ].term.fit();
+                }
+
+
+            });
+        });
+        $( document ).mouseup( function() {
+            isResize = false;
+            isStartResize = false;
+        });
+    }
+});
+
+$('#tree>.left').Resize('right');
+$('#terminal_module').Resize('top');
+
+
+
 function data_init(curPath){
     files.name = curPath;
     files.path = curPath;
@@ -53,8 +133,17 @@ var vmMessage = new Vue({
 function window_init() {
     h = $(window).height() - 100;
     $('.left').css('height', h);
-    $('.right').css('height', h);
+    var right = $('#tree').width() - $('.left').width() - 24;
+    $('.right').css('width', right);
+    $('.right').css('height', h);    
     $('.content').css('height', h - 70 - $('.terminal_module').height())
+    $('#terminal_module').css('width', right)
+    if($('.terminal_module .xterm-rows').height() > $('.terminal_module').height()){
+        $('.terminal_module .terminal_window').css('height', $('.terminal_module .xterm-rows').height() + 20)
+    }else{
+        $('.terminal_module .terminal_window').css('height', $('.terminal_module').height() - 20)
+    }
+    
 }
 
 function get_path(){
@@ -526,8 +615,8 @@ function add_terminal(){
     var id = get_id();
     vm.$set("labels." +id, true);
     vm.curLabel = id;
-    console.log(vm)
     setTimeout(function(){
+        $('.terminal_module .terminal_window').css('height', $('.terminal_module').height() - 20)
         terminals[id] =  create_terminal('terminal-container'+id);
     }, 100)
 }
@@ -543,15 +632,15 @@ function run_terminal(){
     }
 }
 
-function show_terminal(){
+function show_terminal(){    
     $('.terminal_module').css('height', '250px');
     $('.terminal_module').show();
-    setTimeout(function(){
+    setTimeout(function(){        
         window_init();
         if (editor[vm.curTab]) {
             editor[vm.curTab].layout();
         }
-    }, 100)
+    }, 500)
     
 }
 
@@ -599,12 +688,13 @@ function createTerminal() {
     terminalContainer.removeChild(terminalContainer.children[0]);
   }
   term = new Terminal();
-  setTimeout(function(){
-      runFakeTerminal()
-  }, 3000)
-  console.log(term)
   protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
-  socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '') + '/bash';
+
+  var rows = Math.floor(($('.terminal_module').height() - 20) / 20);
+  var cols = 100;
+  
+
+  socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '') + '/bash?path=' + curPath + '&rows=' + rows;
   socket = new WebSocket(socketURL);
 
   term.open(terminalContainer);
@@ -613,6 +703,7 @@ function createTerminal() {
   socket.onopen = runRealTerminal;
   socket.onclose = runFakeTerminal;
   socket.onerror = runFakeTerminal;
+
 }
 
 

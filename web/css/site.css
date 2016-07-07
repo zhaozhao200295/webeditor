@@ -1,16 +1,17 @@
 body{
-    
-    background-color: #191818;   
+    background-color: #191818;overflow: hidden
 }
 
-.webpage{color:#abb2bf; }
+.webpage{color:#abb2bf; width:100% }
 
 .left{
+    width:350px;
     padding-top:12px;
     border-right:  4px solid #333;
     cursor: pointer;
     overflow: auto;
-    white-space:nowrap; 
+    white-space:nowrap;
+    float:left;
 }
 
 .left ul {
@@ -19,11 +20,10 @@ body{
   list-style: none;
 }
 
+.right{float:right}
 .right>.header{height:30px;}
-.right{display: flex; box-orient:vertical; flex-direction:column;}
-.right>.content{flex:1;}
-.right>.terminal_module{height:0; background: #191818; display: none}
-.right>.terminal_module .header{height:18px;border-top: 1px solid #313131; padding-right:10px;}
+.right>.terminal_module{height:0; background: #191818; display: none; position: absolute; bottom:20px; padding-bottom: 0;overflow: auto;}
+.right>.terminal_module .header{height:18px;border-top: 1px solid #313131; padding-right:10px;  width:100%}
 .right>.terminal_module .header .close{color:#A8A8A8; opacity: 1; font-size:18px;margin-right:2px;margin-bottom: 5px;}
 .right>.terminal_module .header .close :hover{color:#eee}
 .right>.terminal_module .header button{margin-left:3px;}
@@ -31,6 +31,7 @@ body{
 .right>.terminal_module .header>ul{list-style: none; margin:0; padding-left:5px;width:500px;float:left}
 .right>.terminal_module .header>ul li{display: inline-block; width:15px;color:#A8A8A8;}
 .right>.terminal_module .header>ul li:hover{color:#eee}
+
 
 .right>.header ul{list-style: none;    padding: 0}
 .right>.header ul li{ white-space:nowrap; min-width:40px; max-width:180px; width:200px; text-align: center; color:#999FAB; border-right: 1px solid #313131;line-height: 30px;position:relative; display:inline-block}

@@ -39,12 +39,7 @@ app.all("/get_file_list", (req, res) =>{
     var opendir = req.query.path || '/';
     var project = req.query.project || 0;
     
-    var curPath = path.resolve(opendir);
-    if (project == 1 && pathTable.find({ path: curPath }).value() === undefined) {
-        pathTable.push({
-            path: curPath
-        }).value()
-    }
+    var curPath = path.resolve(opendir);    
 
     var files = fs.readdirSync(curPath);
     var name = path.basename(curPath) == '' ? '/' : path.basename(curPath);
@@ -74,7 +69,13 @@ app.all("/get_file_list", (req, res) =>{
             })
         }
     })
-
+    if(arrPath.length > 0 || arrFile.length> 0){
+        if (project == 1 && pathTable.find({ path: curPath }).value() === undefined) {
+            pathTable.push({
+                path: curPath
+            }).value()
+        }
+    }
     res.send(arrPath.concat(arrFile));
 })
 
@@ -188,11 +189,12 @@ app.ws('/bash', function(ws, req) {
   /**
    * Open bash terminal and attach it
    */
+  console.log(req.query.rows)
   var term = pty.spawn(process.platform === 'win32' ? 'cmd.exe' : 'bash', [], {
     name: 'xterm-color',
     cols: 100,
-    rows: 10,
-    cwd: process.env.PWD,
+    rows: req.query.rows? parseInt(req.query.rows, 10) : 10,
+    cwd: req.query.path ? req.query.path :process.env.PWD,
     env: process.env
   });
 

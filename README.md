@@ -24,10 +24,12 @@ npm start
 cd webeditor   
 npm install   
 npm start   
+
 #Useage
-http://ip:8888
+http://ip:8888   
 
 ![Alt text](webeditor.png)
+
 #未来计划推出的功能： 
 1. 项目搜索功能
 2. 允许多用户同步编辑。

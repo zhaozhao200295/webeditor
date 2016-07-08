@@ -8,8 +8,9 @@ webeditor一个开源的web开发IDE.其设计思想是简单,易用
 
 #Install
 ## linux,unit系统
-npm install -g webeditor
-webeditor
+npm install -g webeditor   
+webeditor   
+
 ## windows系统
 下载 https://github.com/suxiaoxin/webeditor.git  压缩包解压到webeditor目或者git clone   
 因为pty.js依赖node-gyp,所以需要安装下面的依赖，https://github.com/nodejs/node-gyp   

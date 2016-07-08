@@ -54,7 +54,6 @@ $.fn.extend( {
             var initY = e.pageY;
             var initHeight = $( this ).height();
             var initWidth = $( this ).width();
-            console.log( initWidth )
             if( $( this ).width() - currentDisX < currentDisTance ) {
                 $( this ).css( "cursor", "e-resize" );
                 $( this ).attr( "mode", "re" );
@@ -199,7 +198,7 @@ function show_editor(content, type, id, readOnly) {
         return;
     }
     
-    if( content ) {
+    if( type ) {
         contents[id] = content;
         setTimeout( function() {
             editor[ id ] = editor_create( document.getElementById( 'content' + id ), {

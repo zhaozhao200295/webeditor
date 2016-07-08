@@ -99,12 +99,12 @@ $('#terminal_module').Resize('top');
 
 
 
-function data_init(curPath){
-    files.name = curPath;
-    files.path = curPath;
+function data_init(filepath){
+    files.name = filepath;
+    files.path = filepath;
     files.children = [];
-
-    get_file_list(curPath, function (data) {
+    curPath = filepath;
+    get_file_list(filepath, function (data) {
         files.open = true;
         data.forEach(function (d) {
             files.children.push(d)

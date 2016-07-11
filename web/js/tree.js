@@ -215,6 +215,7 @@ function show_editor(content, type, id, readOnly) {
                 }
                 
             })
+            editor[id].focus();
             var lis = $('#header li');
             lis.each(function(){
                 $(this).css('width', 100/lis.length  + '%');
@@ -271,6 +272,8 @@ function open_file(name, path, id) {
         vm.curTab = pathMap[path];
         return;
     }
+
+    id = id || get_id();
 
     vm.$set('tabs.' + id, {
         _id: id,
@@ -534,6 +537,11 @@ function api_reanme_file(old_file, new_file, cb){
     $.post('/rename_file', {old: old_file, new: new_file}, cb);
 }
 
+//params = {path:'/var', name: 'input', ignore: 'node_modules, bower_components'}
+function api_search(params, cb){
+    $.get('/search', params, cb);
+}
+
 menuVm = new Vue({
     el: '#contextMenu',
     data: {
@@ -605,6 +613,14 @@ menuVm = new Vue({
         refresh: function(){            
             var path = this.model.path;
             render_file_list(path, this.model.children)
+        },
+        search: function(){            
+            if(this.model.type == 'file'){
+                vmSearch.path = this.model.parent.path;
+            }else{
+                vmSearch.path = this.model.path;
+            }
+            vmSearch.show();
         }
     }
 })
@@ -845,7 +861,74 @@ var vmConfirm = new Vue({
     }
 })
 
+var search_text_dialog = $('#search_text_dialog');
+var vmSearch = new Vue({
+    el: '#search_text_dialog',
+    data: {
+        title: '项目代码搜索',
+        name: '',
+        path: '',
+        ignore: 'node_modules,bower_components',
+        search: function(){
+            var name = vmSearch.name;
+            var path = vmSearch.path;
+            var ignore = vmSearch.ignore;
+            if(name.length == 0){
+                alert('必须输出查询字符串');
+                return;
+            }
+            if(vmSearch.result.length > 0){
+                vmSearch.result.splice(0, vmSearch.result.length);
+            }
+            api_search({name: name, path:path, ignore:ignore}, function(data){
+                if(data.errno === 0){
+                    
+                    _.each(data.result, function(d){
+                        vmSearch.result.push(d)
+                    })
+                }                
+            })
 
+            return false;
+        },
+        result: [],
+        open_file: function(filepath, line){
+            var name =  filepath.substring(filepath.lastIndexOf('.') + 1);
+            var id = get_id();
+            vmSearch.hide();
+            open_file(name, filepath, id);            
+            setTimeout(function(){
+                editor[id].revealPositionInCenter({ lineNumber: line, column: 0 });
+            }, 500)
+        },
+        show: function(){
+            search_text_dialog.modal({
+                backdrop: 'static'
+            });
+        },
+        hide: function(){
+            search_text_dialog.modal('hide');
+        }
+    }
+})
+
+$('#search_text_dialog').submit(function(){
+    return false;
+})
+
+$('#search_text').click(function(){
+    vmSearch.path = curPath;
+    vmSearch.show();
+    return false;
+})
+
+$(document).bind('keydown', function(event){
+    if(event.ctrlKey == true && event.keyCode == 70 && event.shiftKey){
+        vmSearch.path = curPath;
+        vmSearch.show();
+        return false;
+    }
+})
 
 
 

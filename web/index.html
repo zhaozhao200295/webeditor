@@ -29,7 +29,7 @@
               <ul class="dropdown-menu">
                 <li><a href="#" id="save_file">Save File(Ctrl + s)</a></li>
                 <li><a href="#" id="run_terminal">Terminal(Ctrl + `)</a></li>
-                <li><a href="#">About</a></li>
+                <li><a href="#" id="search_text">搜索代码</a></li>
               </ul>
             </li>
           </ul>
@@ -86,6 +86,9 @@
 </div>
 
 <ul id="contextMenu" class="dropdown-menu">
+    <li>
+      <a href="javascript:;" v-on:click="search()">搜索</a>
+    </li>
     <li v-if="type=='folder'">
       <a href="javascript:;" v-on:click="add('file')" >新建文件</a>	
     </li>
@@ -165,6 +168,55 @@
   <strong>{{content}}</strong> 
 </div></div>
 
+<div id="search_text_dialog" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" style="opacity: 0.8;" aria-labelledby="myLargeModalLabel" >
+ <div class="modal-dialog" style="max-height:500px;overflow-y: auto">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{title}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <form class="form-horizontal">
+        <div class="form-group">
+          <label for="searchname" class="col-sm-3 control-label">查询字符串</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="searchname" v-model="name" placeholder="搜索字符串,可以是正则">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="searchpath" class="col-sm-3 control-label">搜索目录</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="searchpath" v-model="path" placeholder="搜索项目路径">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ignorepath" class="col-sm-3 control-label">忽略目录</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="ignorepath" v-model="ignore" placeholder="输入要忽略的目录,用','分开">
+          </div>
+           <div class="col-sm-3">
+            <button type="submit" class="btn btn-default" v-on:click="search">搜索</button>
+          </div>
+        </div>
+
+      </form>
+      
+      </div>
+
+      <div class="panel panel-defaul" style="margin-top:25px; border-top:1px solid #e5e5e5" v-show="result.length > 0">
+         <div class="panel-heading">Result:</div>
+          <div class="panel-body" style="padding-top:5px;padding-bottom:0">
+               <dl v-for="r in result">
+              <dt>{{r.path}}</dt>
+              <dd v-for="code in r.code" v-on:click="open_file(r.path, code[0])" style="cursor:pointer">{{code[0]}} {{code[1]}}</dd>
+          </dl>
+          </div>
+         
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 
 

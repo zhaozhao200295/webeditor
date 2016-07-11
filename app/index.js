@@ -1,4 +1,5 @@
 'use strict';
+
 var express = require('express');
 var fs      = require('fs');
 var path    = require('path');
@@ -13,7 +14,7 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 var webeditorPath = path.dirname(__dirname); //webeditor project path
 
-
+const search = require('./search.js');
 
 const low = require('lowdb')
 const fileAsync = require('lowdb/lib/file-async')
@@ -181,6 +182,22 @@ app.post('/rename_file', upload.array(), (req, res)=>{
             errmsg: err.message
         })
     }
+
+})
+
+app.get('/search', (req, res)=>{
+    var path = req.query.path;
+    var name  = req.query.name;
+    var ignore = req.query.ignore;
+    if(_.isString(ignore) && ignore.length > 0){
+        ignore =ignore.split(',')
+    }
+    var data = search(path, name, {ignorePath: ignore});
+    res.send({
+            errno: 0,
+            result: data,
+            errmsg: 'success'
+        })
 
 })
 

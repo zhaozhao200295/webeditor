@@ -238,6 +238,7 @@ app.use(express.static(webeditorPath + '/web'));
 app.use('/bower_components', express.static(webeditorPath + '/bower_components'));
 app.use('/node_modules', express.static(webeditorPath + '/node_modules'));
 
-app.listen(9191, function(){
-    console.log('Starting up: http://localhost:8888')
+var port = 8888;
+app.listen(port, function(){
+    console.log('Starting up: http://localhost:' + port)
 });
